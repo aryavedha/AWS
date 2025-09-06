@@ -82,9 +82,9 @@ sudo nano /etc/fstab
 ```
 
 Add the following line at the end (replace <UUID> with the actual UUID):
-
+```bash
 UUID=<UUID> /mnt/ebs_volume ext4 defaults,nofail 0 2
-
+```
 
 Save and exit the editor.
 
