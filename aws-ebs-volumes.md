@@ -2,7 +2,10 @@ Step-by-Step Debugging (AWS EC2):
 #1. Check if the volume is visible at all
 
 Run:
+
+```bash
 lsblk
+```
 
 #"(Do you see /dev/xvdf in the output?)"
 (or)
@@ -16,50 +19,60 @@ bash
 
 #(danger:read here)
 # "it will format the disk data: 1st time we need run but second time if format is require only we should run."
-sudo mkfs -t ext4 /dev/nvme1n1
 
+```bash
+sudo mkfs -t ext4 /dev/nvme1n1
+```
+create directory for volume
+```bash
 sudo mkdir -p /mnt/myvolume    
+```
+volume mount to server to use it
+```bash
 sudo mount /dev/nvme1n1 /mnt/myvolume
+```
 
 (Make it Mount on Reboot):
 #before that Backup the /etc/fstab file for safeside.
-
+```bash
 sudo cp /etc/fstab /etc/fstab.bak
+```
 
 Add to /etc/fstab:
 bash
+```bash
 echo "/dev/nvme1n1 /mnt/myvolume ext4 defaults,nofail 0 2" | sudo tee -a /etc/fstab
-
+```
 #Final Reminder:
 Stop trying to use /dev/xvdf manually if you're on a Nitro-based EC2 instance — use the actual device name (nvme1n1, etc.) as shown by lsblk.
 
 (Mount Command):
 
 #Create a mount point (directory):
-bash
+```bash
 sudo mkdir -p /mnt/myvolume
-
+```
 #Mount the device (example uses /dev/nvme1n1):
-bash
+```bash
 sudo mount /dev/nvme1n1 /mnt/myvolume
-
+```
 #"Replace /dev/nvme1n1 with your actual device (you can find it using lsblk)."
 
 (To Check Mount):
-bash
+```bash
 df -hT
-
+```
 (Unmount Command):
 
 #To unmount the volume:
-bash
+```bash
 sudo umount /mnt/myvolume
-
+```
 #If the volume is busy (used by a process), you may need to stop that process first or use:
-bash
+```bash
 sudo fuser -vm /mnt/myvolume
-
+```
 #To force unmount:
-bash
+```bash
 sudo umount -l /mnt/myvolume
-
+```
