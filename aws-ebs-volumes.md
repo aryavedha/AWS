@@ -35,42 +35,26 @@ For Device, specify a device name (e.g., /dev/xvdf).
 
 Click Attach Volume.
 
-Using AWS CLI:
-
-aws ec2 attach-volume \
-  --volume-id vol-01234567890abcdef \
-  --instance-id i-1234567890abcdef0 \
-  --device /dev/xvdf
-
-
-AWS Documentation
-
-2. Connect to Your EC2 Instance
-
-Use SSH to connect:
-
-ssh -i /path/to/your-key.pem ec2-user@your-ec2-instance-ip
-
-3. Verify the Attached Volume
+1. Verify the Attached Volume
 
 List block devices:
-
+```bash
 lsblk
-
+```
 
 You should see the new volume (e.g., /dev/xvdf) listed.
 
-4. Create a Filesystem on the Volume
+2. Create a Filesystem on the Volume
 
 Check if the volume is empty:
-
+```bash
 sudo file -s /dev/xvdf
-
+```
 
 If it returns data, the volume is empty. Proceed to format:
-
+```bash
 sudo mkfs -t ext4 /dev/xvdf
-
+```
 
 Note: Formatting will erase all data on the volume.
 
@@ -79,23 +63,23 @@ DevOpsCube
 5. Mount the Volume
 
 Create a mount point and mount the volume:
-
+```bash
 sudo mkdir /mnt/ebs_volume
 sudo mount /dev/xvdf /mnt/ebs_volume
-
+```
 6. Configure Automatic Mount on Reboot
 
 To ensure the volume mounts automatically after a reboot:
 
 Retrieve the UUID of the device:
-
+```bash
 sudo blkid /dev/xvdf
-
+```
 
 Edit the /etc/fstab file:
-
+```bash
 sudo nano /etc/fstab
-
+```
 
 Add the following line at the end (replace <UUID> with the actual UUID):
 
