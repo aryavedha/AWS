@@ -60,14 +60,14 @@ Note: Formatting will erase all data on the volume.
 
 DevOpsCube
 
-5. Mount the Volume
+3. Mount the Volume
 
 Create a mount point and mount the volume:
 ```bash
 sudo mkdir /mnt/ebs_volume
 sudo mount /dev/xvdf /mnt/ebs_volume
 ```
-6. Configure Automatic Mount on Reboot
+4. Configure Automatic Mount on Reboot
 
 To ensure the volume mounts automatically after a reboot:
 
