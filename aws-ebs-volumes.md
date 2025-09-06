@@ -20,6 +20,7 @@ bash
 #(danger:read here)
 # "it will format the disk data: 1st time we need run but second time if format is require only we should run."
 
+format the data
 ```bash
 sudo mkfs -t ext4 /dev/nvme1n1
 ```
