@@ -1,4 +1,114 @@
-Step-by-Step Debugging (AWS EC2):
+📌 Prerequisites
+
+Ensure the EBS volume and EC2 instance are in the same Availability Zone.
+
+The EC2 instance should be in a running state.
+
+AWS Documentation
+
+⚠️ Important Considerations
+
+Data Preservation: If you're attaching a volume that contains data, do not format it. Instead, mount it directly after verifying its filesystem.
+
+Multi-Attach: If you need to attach a single EBS volume to multiple EC2 instances simultaneously, consider using EBS Multi-Attach with io1 or io2 volume types. This feature is available in specific regions and has certain limitations. 
+AWS Documentation
+
+🛠️ Step-by-Step Guide
+1. Attach the EBS Volume
+
+Using the AWS Management Console:
+
+Navigate to the EC2 Dashboard
+.
+
+In the left navigation pane, choose Volumes.
+
+Select the volume you want to attach.
+
+Click Actions > Attach Volume.
+
+In the dialog box:
+
+For Instance, select the EC2 instance.
+
+For Device, specify a device name (e.g., /dev/xvdf).
+
+Click Attach Volume.
+
+Using AWS CLI:
+
+aws ec2 attach-volume \
+  --volume-id vol-01234567890abcdef \
+  --instance-id i-1234567890abcdef0 \
+  --device /dev/xvdf
+
+
+AWS Documentation
+
+2. Connect to Your EC2 Instance
+
+Use SSH to connect:
+
+ssh -i /path/to/your-key.pem ec2-user@your-ec2-instance-ip
+
+3. Verify the Attached Volume
+
+List block devices:
+
+lsblk
+
+
+You should see the new volume (e.g., /dev/xvdf) listed.
+
+4. Create a Filesystem on the Volume
+
+Check if the volume is empty:
+
+sudo file -s /dev/xvdf
+
+
+If it returns data, the volume is empty. Proceed to format:
+
+sudo mkfs -t ext4 /dev/xvdf
+
+
+Note: Formatting will erase all data on the volume.
+
+DevOpsCube
+
+5. Mount the Volume
+
+Create a mount point and mount the volume:
+
+sudo mkdir /mnt/ebs_volume
+sudo mount /dev/xvdf /mnt/ebs_volume
+
+6. Configure Automatic Mount on Reboot
+
+To ensure the volume mounts automatically after a reboot:
+
+Retrieve the UUID of the device:
+
+sudo blkid /dev/xvdf
+
+
+Edit the /etc/fstab file:
+
+sudo nano /etc/fstab
+
+
+Add the following line at the end (replace <UUID> with the actual UUID):
+
+UUID=<UUID> /mnt/ebs_volume ext4 defaults,nofail 0 2
+
+
+Save and exit the editor.
+
+Note: It's recommended to back up the /etc/fstab file before editing.
+
+
+---
+2)Step-by-Step Debugging (AWS EC2):
 #1. Check if the volume is visible at all
 
 Run:
